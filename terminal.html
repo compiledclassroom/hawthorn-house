@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Foxglove Hollow Historical Archive — Remote Access</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Share+Tech+Mono&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    background-color: #0d0d0d;
+    background-image:
+      radial-gradient(ellipse at 30% 60%, rgba(80,55,15,0.2) 0%, transparent 55%),
+      radial-gradient(ellipse at 75% 25%, rgba(50,35,10,0.15) 0%, transparent 50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+  }
+
+  /* ── OUTER FRAME ── */
+  .login-frame {
+    width: 100%;
+    max-width: 520px;
+  }
+
+  /* ── HEADER ── */
+  .archive-header {
+    border: 2px solid #1a4a1a;
+    border-radius: 4px 4px 0 0;
+    background: linear-gradient(180deg, #0a1a0a 0%, #0d0d0d 100%);
+    padding: 24px 28px 18px;
+    text-align: center;
+    position: relative;
+  }
+
+  .header-rule {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #1a4a1a, #00ff41, #1a4a1a, transparent);
+    margin: 10px 0;
+  }
+
+  .archive-eyebrow {
+    font-size: 10px;
+    letter-spacing: 5px;
+    color: #1a6a1a;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .archive-name {
+    font-family: 'Special Elite', serif;
+    font-size: 20px;
+    letter-spacing: 1.5px;
+    color: #00ff41;
+    line-height: 1.4;
+  }
+
+  .archive-tagline {
+    font-size: 11px;
+    color: #1a4a1a;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  .ornament {
+    color: #0a2a0a;
+    letter-spacing: 10px;
+    font-size: 14px;
+    margin-top: 6px;
+  }
+
+  /* ── LOGIN BOX ── */
+  .login-box {
+    border: 2px solid #1a4a1a;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    background: #000000;
+    padding: 32px 36px 36px;
+  }
+
+  .login-instruction {
+    font-size: 11.5px;
+    color: #1a6a1a;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #2a2010;
+  }
+
+  /* ── FIELDS ── */
+  .field-group {
+    margin-bottom: 20px;
+  }
+
+  label {
+    display: block;
+    font-size: 11px;
+    color: #7a6030;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  input[type="text"],
+  input[type="password"] {
+    width: 100%;
+    background: #000000;
+    border: 1px solid #0a2a0a;
+    border-radius: 2px;
+    padding: 10px 14px;
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+    font-size: 14px;
+    color: #00ff41;
+    outline: none;
+    transition: border-color 0.2s;
+    caret-color: #00ff41;
+  }
+
+  input[type="text"]:focus,
+  input[type="password"]:focus {
+    border-color: #00ff41;
+    background: #0a0a0a;
+  }
+
+  input[type="text"]::placeholder,
+  input[type="password"]::placeholder {
+    color: #1a4a1a;
+  }
+
+  /* ── BUTTON ── */
+  .connect-btn {
+    margin-top: 28px;
+    width: 100%;
+    background: #000000;
+    border: 1px solid #7a5c10;
+    border-radius: 2px;
+    padding: 12px;
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: #00ff41;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .connect-btn:hover {
+    background: #0a1a0a;
+    border-color: #00ff41;
+  }
+
+  .connect-btn:active {
+    background: #0a2a0a;
+  }
+
+  /* ── STATUS / ERROR ── */
+  #status-msg {
+    margin-top: 16px;
+    font-size: 12px;
+    min-height: 18px;
+    text-align: center;
+    letter-spacing: 1px;
+  }
+
+  .msg-loading { color: #1a6a1a; }
+  .msg-error   { color: #ff4444; }
+
+  /* ── FOOTER ── */
+  .login-footer {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 10.5px;
+    color: #3a3020;
+    letter-spacing: 2px;
+    line-height: 1.8;
+  }
+</style>
+</head>
+<body>
+
+<div class="login-frame">
+
+  <!-- HEADER -->
+  <div class="archive-header">
+    <div class="archive-eyebrow">Established 1887 &nbsp;·&nbsp; Foxglove Hollow, MD</div>
+    <div class="header-rule"></div>
+    <div class="archive-name">Foxglove Hollow<br>Historical Archive</div>
+    <div class="archive-tagline">Remote Access Terminal</div>
+    <div class="header-rule"></div>
+    <div class="ornament">— ✦ —</div>
+  </div>
+
+  <!-- LOGIN -->
+  <div class="login-box">
+
+    <div class="login-instruction">Researcher credentials required</div>
+
+    <div class="field-group">
+      <label for="username">Username</label>
+      <input type="text" id="username" value="guest" autocomplete="off"
+             autocorrect="off" autocapitalize="off" spellcheck="false" />
+    </div>
+
+    <div class="field-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="enter password"
+             autocomplete="off" spellcheck="false" />
+    </div>
+
+    <button class="connect-btn" onclick="checkLogin()">Connect</button>
+
+    <div id="status-msg"></div>
+
+  </div>
+
+  <!-- FOOTER NOTE -->
+  <div class="login-footer">
+    Access logged &nbsp;·&nbsp; Unauthorized use is prohibited<br>
+    Foxglove Hollow Historical Society &nbsp;·&nbsp; All rights reserved
+  </div>
+
+</div>
+
+<script>
+function checkLogin() {
+  const pw = document.getElementById('password').value.trim().toLowerCase();
+  const msg = document.getElementById('status-msg');
+
+  if (pw === 'foxglove1864') {
+    msg.className = 'msg-loading';
+    msg.textContent = 'Credentials verified. Loading archive...';
+    setTimeout(() => {
+      window.location.href = 'terminal-shell.html';
+    }, 800);
+  } else if (pw === '') {
+    msg.className = 'msg-error';
+    msg.textContent = 'Please enter a password.';
+  } else {
+    msg.className = 'msg-error';
+    msg.textContent = 'Access denied. Incorrect password.';
+  }
+}
+
+document.getElementById('password').addEventListener('keyup', function(e) {
+  if (e.key === 'Enter') checkLogin();
+});
+</script>
+
+</body>
+</html>

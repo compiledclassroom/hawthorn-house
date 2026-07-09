@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Deed — Hawthorn House</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background-color: #f0ebe0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    color: #2a1f0f;
+    font-family: 'Source Serif 4', 'Georgia', serif;
+    min-height: 100vh;
+    padding: 48px 20px 80px;
+  }
+
+  .page-wrap {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  /* ── ACT LABELS ── */
+  .act-label {
+    font-size: 11px;
+    letter-spacing: 5px;
+    color: #8b3a1a;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-family: 'Source Serif 4', serif;
+    margin-bottom: 6px;
+  }
+
+  .act-title {
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-size: 38px;
+    font-weight: 700;
+    color: #1e1408;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+
+  .act-intro {
+    font-style: italic;
+    font-size: 19px;
+    color: #5a4a2a;
+    line-height: 1.65;
+    margin-bottom: 20px;
+    max-width: 640px;
+  }
+
+  .act-rule {
+    width: 60px;
+    height: 3px;
+    background: #8b3a1a;
+    margin-bottom: 36px;
+    border: none;
+  }
+
+  /* ── DOCUMENT SECTIONS ── */
+  .document-section {
+    margin-bottom: 40px;
+  }
+
+  .document-label {
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: #8b3a1a;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    font-family: 'Source Serif 4', serif;
+    font-weight: 600;
+  }
+
+  .paper-image {
+    width: 100%;
+    border-radius: 3px;
+    display: block;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.18), 0 1px 4px rgba(0,0,0,0.12);
+  }
+
+  .paper-image.scrap {
+    max-width: 580px;
+    margin: 0 auto;
+  }
+
+  /* ── SECTION DIVIDER ── */
+  .section-divider {
+    border: none;
+    border-top: 2px solid #c8a870;
+    margin: 56px 0;
+    position: relative;
+  }
+  .section-divider::after {
+    content: "✦";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #f0ebe0;
+    padding: 0 16px;
+    color: #8b3a1a;
+    font-size: 18px;
+  }
+
+  /* ── PORTRAIT ── */
+  .portrait-section {
+    text-align: center;
+    margin: 48px 0;
+    padding: 32px 0;
+    border-top: 1px solid #d4c8a8;
+    border-bottom: 1px solid #d4c8a8;
+  }
+  .portrait-eyebrow {
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: #8b3a1a;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .portrait-img {
+    width: 260px;
+    max-width: 90%;
+    border-radius: 2px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    display: block;
+    margin: 0 auto 20px;
+  }
+  .portrait-caption {
+    font-style: italic;
+    font-size: 18px;
+    color: #5a4a2a;
+    line-height: 1.7;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* ── LEDGER ── */
+  .ledger-label {
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: #8b3a1a;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    font-family: 'Source Serif 4', serif;
+    font-weight: 600;
+    text-align: center;
+  }
+  .ledger-description {
+    font-style: italic;
+    font-size: 19px;
+    color: #5a4a2a;
+    line-height: 1.7;
+    max-width: 600px;
+    margin: 0 auto 22px;
+    text-align: left;
+  }
+
+  /* ── FLAG BLOCK ── */
+  .flag-block {
+    margin-top: 52px;
+    padding: 24px 28px;
+    border: 1px solid #d4c8a8;
+    border-radius: 3px;
+    background: #e8e0cc;
+    text-align: center;
+  }
+  .flag-label {
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #7a6a4a;
+    margin-bottom: 10px;
+  }
+  .flag-value {
+    font-family: 'Courier New', monospace;
+    font-size: 24px;
+    font-weight: bold;
+    color: #2a1f0f;
+    letter-spacing: 1px;
+  }
+
+  /* ── CERTIFICATE ── */
+  .cert-block {
+    margin-top: 32px;
+    text-align: center;
+    padding: 28px;
+    background: #f8f4ec;
+    border: 1px solid #d4c8a8;
+    border-radius: 3px;
+  }
+  .cert-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    color: #1e1408;
+    margin-bottom: 10px;
+  }
+  .cert-text {
+    font-size: 18px;
+    color: #5a4a2a;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  .cert-link {
+    display: inline-block;
+    background: #8b3a1a;
+    color: #f8f4ec;
+    text-decoration: none;
+    font-family: 'Source Serif 4', serif;
+    font-size: 17px;
+    letter-spacing: 1.5px;
+    padding: 12px 28px;
+    border-radius: 2px;
+    transition: background 0.2s;
+  }
+  .cert-link:hover { background: #6a2c12; }
+  .qr-note {
+    font-size: 12px;
+    color: #9a8a6a;
+    margin-top: 12px;
+    font-style: italic;
+  }
+
+  /* ── RESOLUTION BOX ── */
+  .resolution-box {
+    background: #1e1408;
+    border-radius: 4px;
+    padding: 28px 32px;
+    margin-bottom: 40px;
+  }
+  .resolution-box p {
+    color: rgba(255,255,255,0.75);
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 10px;
+  }
+  .resolution-box p:last-child { margin-bottom: 0; }
+  .resolution-box strong { color: #c8960a; }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <!-- ══════════════════════════════════
+       ACT 1 — THE RESOLUTION
+  ══════════════════════════════════ -->
+
+  <div class="act-label">Act One</div>
+  <h1 class="act-title">The Last Night</h1>
+  <p class="act-intro">Two documents recovered from the scene. One written by Eleanor Brackenhollow herself. One by the detective who investigated her death.</p>
+  <hr class="act-rule">
+
+  <!-- Eleanor's final note -->
+  <div class="document-section">
+    <div class="document-label">Eleanor Brackenhollow's own hand &nbsp;·&nbsp; October 8, 2024 &nbsp;·&nbsp; found beneath the desk blotter</div>
+    <img src="images/Eleanor_final_note.png"
+         alt="Eleanor's final handwritten note naming Ruth Castellan and describing the dispute over the deed"
+         class="paper-image" />
+  </div>
+
+  <!-- Police report -->
+  <div class="document-section">
+    <div class="document-label">Foxglove Hollow Police Department &nbsp;·&nbsp; Case Summary &nbsp;·&nbsp; October 10, 2024</div>
+    <img src="images/Police_case_summary.png"
+         alt="Foxglove Hollow Police Department case summary naming Ruth Castellan as primary suspect"
+         class="paper-image" />
+  </div>
+
+  <!-- Resolution summary box -->
+  <div class="resolution-box">
+    <p><strong>The case is solved.</strong> Ruth Castellan killed Eleanor Brackenhollow on the night of October 8th.</p>
+    <p>Her motive: a $2,000,000 sale of Hawthorn House to Meridian Land Group — a deal that required Eleanor's silence about the deed hidden in the upstairs study.</p>
+    <p>Eleanor refused to stay silent. Ruth made sure she couldn't speak.</p>
+    <p>Eleanor's final act was to write it all down — and hide the truth where only someone who cared enough to look would find it.</p>
+    <p><strong>You found it. Josephine Ferris's story can finally be told.</strong></p>
+  </div>
+
+  <!-- ══════════════════════════════════
+       ACT 2 — THE DEED
+  ══════════════════════════════════ -->
+
+  <div class="section-divider"></div>
+
+  <div class="act-label">Act Two</div>
+  <h2 class="act-title">The Deed</h2>
+  <p class="act-intro">Wrapped in oilcloth, brittle with age. Hidden behind the hearthstone in the upstairs study. This is what Eleanor died to protect.</p>
+  <hr class="act-rule">
+
+  <!-- Document A: Original deed -->
+  <div class="document-section">
+    <div class="document-label">Document A &nbsp;·&nbsp; Land Deed, June 14, 1864</div>
+    <img src="images/Josephine_Ferris_Deed.png"
+         alt="Handwritten land deed dated June 14 1864 certifying Josephine Ferris as the rightful owner of the Hollow Tract"
+         class="paper-image" />
+  </div>
+
+  <!-- Document B: Town Clerk -->
+  <div class="document-section">
+    <div class="document-label">Below, in different, hastier handwriting &nbsp;·&nbsp; June 28, 1864</div>
+    <img src="images/Town_Clerk.png"
+         alt="Hastier handwriting added by the town clerk recording the transfer to Edmund Brackenhollow with no payment and no consent"
+         class="paper-image" />
+  </div>
+
+  <!-- Portrait of Josephine -->
+  <div class="portrait-section">
+    <div class="portrait-eyebrow">Josephine Ferris &nbsp;·&nbsp; Foxglove Hollow, Maryland</div>
+    <img src="images/josephine-ferris-portrait.jpg"
+         alt="Portrait of Josephine Ferris"
+         class="portrait-img" />
+    <p class="portrait-caption">
+      Josephine Ferris purchased the Hollow Tract fairly in 1858, earned through her work as a seamstress. She disappears from Foxglove Hollow's records entirely after June 1864. Her whereabouts were never confirmed.
+    </p>
+  </div>
+
+  <!-- Document C: Eleanor's grandmother pencil note -->
+  <div class="document-section">
+    <div class="document-label">A third hand, in pencil &nbsp;·&nbsp; March 3, 1931</div>
+    <img src="images/Eleanor_B__deed_note.png"
+         alt="Pencil annotation added by Eleanor's grandmother on March 3 1931"
+         class="paper-image" />
+  </div>
+
+  <!-- Torn ledger page -->
+  <div class="document-section" style="text-align:center;">
+    <div class="ledger-label">Torn page from a ledger book &nbsp;·&nbsp; found folded inside the oilcloth</div>
+    <p class="ledger-description">A single torn page, water-stained, listing household accounts from the Brackenhollow family in the years following 1864. Most entries are unremarkable: feed, repairs, wages. One entry, near the bottom, has been underlined twice.</p>
+    <img src="images/Torn_Piece_of_paper.png"
+         alt="Torn ledger page: Inquiry made about J. Ferris, last seen traveling north. No reply received to letters sent. Matter considered closed."
+         class="paper-image scrap" />
+  </div>
+
+  <!-- ══════════════════════════════════
+       ACT 3 — THE FLAG & CERTIFICATE
+  ══════════════════════════════════ -->
+
+  <div class="section-divider"></div>
+
+  <div class="act-label">Act Three</div>
+  <h2 class="act-title">Case Closed</h2>
+  <p class="act-intro">You decoded the cipher. You found the deed. You gave Josephine Ferris her name back. The investigation is complete.</p>
+  <hr class="act-rule">
+
+  <div class="flag-block">
+    <div class="flag-label">Flag found</div>
+    <div class="flag-value">flag{the_deed_found}</div>
+  </div>
+
+  <div class="cert-block">
+    <h2 class="cert-heading">Download Your Certificate</h2>
+    <p class="cert-text">
+      Every investigator who solves the case earns a Cyber Sleuth Certificate of Achievement.<br>
+      Enter your name and download yours below.
+    </p>
+    <a href="certificate.html" class="cert-link">Download My Certificate</a>
+    <p class="qr-note">Or scan the QR code to go directly to the certificate page.</p>
+    <img src="images/certificate-qr.png"
+         alt="QR code to certificate page"
+         style="width:140px; margin:1.2rem auto 0; display:block; border-radius:6px; border:1px solid #d4c8a8;" />
+  </div>
+
+</div><!-- /page-wrap -->
+</body>
+</html>

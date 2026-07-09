@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Foxglove Hollow Historical Archive — Remote Access</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Share+Tech+Mono&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background-color: #0d0d0d;
+    background-image: radial-gradient(ellipse at 20% 50%, rgba(90,60,20,0.15) 0%, transparent 60%),
+                      radial-gradient(ellipse at 80% 20%, rgba(60,40,10,0.1) 0%, transparent 50%);
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px 40px;
+  }
+  .archive-header {
+    width: 100%; max-width: 860px; margin-bottom: 20px;
+    border: 2px solid #1a4a1a; border-radius: 4px;
+    background: linear-gradient(180deg, #0a1a0a 0%, #0d0d0d 100%);
+    padding: 10px 24px 8px; text-align: center;
+  }
+  .archive-header::before, .archive-header::after {
+    content: ''; display: block; height: 1px;
+    background: linear-gradient(90deg, transparent, #1a4a1a, #33cc33, #1a4a1a, transparent);
+    margin: 8px 0;
+  }
+  .archive-seal { font-family:'Special Elite',serif; font-size:10px; letter-spacing:6px; color:#33cc33; text-transform:uppercase; margin-bottom:6px; }
+  .archive-title { font-family:'Special Elite',serif; font-size:22px; letter-spacing:2px; color:#00ff41; line-height:1.3; }
+  .archive-subtitle { font-size:11px; color:#1a6a1a; letter-spacing:3px; text-transform:uppercase; margin-top:6px; }
+  .header-ornament { color:#1a4a1a; font-size:18px; letter-spacing:8px; margin-top:4px; }
+  .status-bar {
+    width:100%; max-width:860px; display:flex; justify-content:space-between; align-items:center;
+    background:#000000; border:1px solid #0a2a0a; border-bottom:none;
+    padding:7px 14px; font-size:13px; color:#1a6a1a; border-radius:3px 3px 0 0;
+  }
+  .status-dot { display:inline-block; width:7px; height:7px; background:#00ff41; border-radius:50%; margin-right:6px; box-shadow:0 0 6px #00ff41; }
+  #terminal {
+    width:100%; max-width:860px; height:520px; background:#000000;
+    border:1px solid #0a2a0a; border-top:none; border-radius:0 0 4px 4px;
+    overflow-y:auto; padding:16px; cursor:text; scroll-behavior:smooth;
+  }
+  #terminal::-webkit-scrollbar { width:8px; }
+  #terminal::-webkit-scrollbar-track { background:#000000; }
+  #terminal::-webkit-scrollbar-thumb { background:#1a4a1a; border-radius:4px; }
+  .line { font-size:15px; line-height:1.7; white-space:pre-wrap; word-break:break-word; }
+  .line-system  { color:#39ff14; }
+  .line-cmd     { color:#f0e8d0; }
+  .line-output  { color:#00cc44; }
+  .line-success { color:#00ff41; }
+  .line-error   { color:#ff4444; }
+  .line-hint    { color:#1a6a1a; font-style:italic; }
+  .line-flag    { color:#00ff41; font-weight:bold; text-shadow:0 0 8px #00ff41; }
+  .line-blank   { color:transparent; user-select:none; }
+  .line-separator { color:#0a2a0a; }
+  .input-row { display:flex; align-items:center; margin-top:4px; padding:0 2px; }
+  .prompt-label { color:#00ff41; font-family:'Share Tech Mono',monospace; font-size:15px; white-space:nowrap; margin-right:6px; user-select:none; }
+  #cmd-input { flex:1; background:transparent; border:none; outline:none; color:#ccffcc; font-family:'Share Tech Mono','Courier New',monospace; font-size:15px; caret-color:#00ff41; }
+  .help-box { margin-top:16px; width:100%; max-width:860px; border:1px solid #0a2a0a; border-radius:3px; padding:14px 20px; background:#000000; }
+  .help-box h3 { font-family:'Special Elite',serif; color:#00ff41; font-size:12px; letter-spacing:2px; text-transform:uppercase; margin-bottom:8px; border-bottom:1px solid #0a2a0a; padding-bottom:6px; }
+  .help-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px 24px; font-size:14px; color:#1a6a1a; }
+  .help-grid code { color:#00ff41; font-size:14px; }
+</style>
+</head>
+<body>
+
+<div class="archive-header">
+  <div class="archive-seal">Established 1858 &nbsp;·&nbsp; Foxglove Hollow, Maryland</div>
+  <div class="archive-title">Foxglove Hollow Historical Archive</div>
+  <div class="archive-subtitle">Remote Records Access System</div>
+</div>
+
+<div class="status-bar">
+  <span><span class="status-dot"></span>Connected &nbsp;·&nbsp; Session active</span>
+  <span>FHHA Digital Records v2.1 &nbsp;·&nbsp; Access level: RESEARCHER</span>
+</div>
+
+<div id="terminal">
+  <div id="output"></div>
+  <div class="input-row">
+    <span class="prompt-label" id="prompt-display">archive@fhha:~$</span>
+    <input type="text" id="cmd-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+  </div>
+</div>
+
+<div class="help-box">
+  <h3>Quick Reference — Supported Commands</h3>
+  <div class="help-grid">
+    <span><code>ls</code> — list files in current folder</span>
+    <span><code>cd [folder]</code> — open a folder</span>
+    <span><code>cat [file]</code> — read a file</span>
+    <span><code>pwd</code> — show your current location</span>
+    <span><code>download [file]</code> — save a file to your computer</span>
+    <span><code>clear</code> — clear the screen</span>
+    <span><code>cd ..</code> — go back one folder</span>
+    <span><code>help</code> — show this list again</span>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// FILESYSTEM — matches 12_Terminal_Filesystem_Plan.md exactly
+// ═══════════════════════════════════════════
+const FS = {
+  type: 'dir',
+  children: {
+
+    'README.txt': { type: 'file', content:
+`Welcome to the Foxglove Hollow Historical Archive remote access system.
+
+This server contains digitized records from the Archive collection,
+including land documents, correspondence, photographs, and local
+history materials dating from the 1840s through the present.
+
+Most records are open to registered researchers.
+A few folders are restricted to Archive staff only.
+
+If you are looking for the Brackenhollow family file,
+start in the /research directory.
+
+— Priya Whitfield, Archive Director` },
+
+    'boundary_survey_1864.txt': { type: 'file', content:
+`SURVEYOR'S FIELD NOTE — June 1864
+Foxglove Hollow Tract, Boundary Inspection
+
+Conducted at the request of the County Clerk's office following
+reports of disruption to standing property markers in the area
+north of the millrace.
+
+FINDINGS:
+The original boundary marker stone for the Hollow Tract (southwest
+corner, placed 1858) has been removed. No replacement was made.
+
+A neighbor, Mr. A. Wren, stated the stone was dislodged during
+the passage of cavalry through the hollow in the weeks prior.
+He believed the original owner's name was cut into the base of
+the stone, but could not confirm.
+
+The boundary as now described in county records relies entirely on
+the 1864 transfer deed. The earlier 1858 deed and its described
+markers have not been located for comparison.
+
+NOTE: This surveyor recommends a full boundary re-survey before
+any future transfer or sale of this parcel.
+That recommendation was not acted upon.
+
+flag{old_boundary}` },
+
+    'staff': { type: 'dir', children: {
+
+      'payroll_OLD': { type: 'dir', children: {
+        '2019_payroll.txt': { type: 'file', content:
+`FOXGLOVE HOLLOW HISTORICAL ARCHIVE
+Staff Payroll Summary — 2019
+
+[RESTRICTED — Staff records are not available to researchers.]` },
+        '2020_payroll.txt': { type: 'file', content:
+`FOXGLOVE HOLLOW HISTORICAL ARCHIVE
+Staff Payroll Summary — 2020
+
+[RESTRICTED — Staff records are not available to researchers.]` },
+        '2021_payroll.txt': { type: 'file', content:
+`FOXGLOVE HOLLOW HISTORICAL ARCHIVE
+Staff Payroll Summary — 2021
+
+[RESTRICTED — Staff records are not available to researchers.]` },
+      }},
+
+      'notes_private': { type: 'dir', children: {
+        'supply_list.txt': { type: 'file', content:
+`ARCHIVE SUPPLIES — ORDER LIST Q2 2024
+
+- Acid-free folders (letter): 2 boxes
+- Mylar sleeves (8x10): 1 box
+- Cotton gloves (M): 3 pairs
+- Archival tissue paper: 1 roll
+- Replacement scanner bulb: 1 unit
+- Thermal label printer ribbon: 2 rolls
+
+Contact: office supply order form, due by 15th of month.` },
+
+        'maintenance_log_spring.txt': { type: 'file', content:
+`ARCHIVE BUILDING — MAINTENANCE LOG
+Spring 2024
+
+March 4   — HVAC filter replaced, reading room
+March 18  — Roof gutter cleared, east side
+April 2   — Fluorescent tube replaced, stacks row 3
+April 19  — Humidity sensor recalibrated, vault room
+May 7     — Exterior downspout reattached, north wall
+May 22    — Parking lot light repaired` },
+
+        'initials_only.txt': { type: 'file', content:
+`[NOTE: Found tucked inside this folder with no label.
+The text appears to be in some kind of code.]
+
+L NQRZ ZKHUH LW LV. LYH DOZDBV
+NQRZQ. QRW WHOOLQJ DQBRQH XQWLO
+VKHV UHDGB.
+- Q.F.
+
+flag{always_known}` },
+      }},
+    }},
+
+    'research': { type: 'dir', children: {
+      'brackenhollow_project': { type: 'dir', children: {
+
+        'brackenhollow_findings_DRAFT.txt': { type: 'file', content:
+`BRACKENHOLLOW FAMILY HISTORY — RESEARCH DRAFT
+Priya Whitfield — working document, not for distribution
+
+The Brackenhollow family has been among Foxglove Hollow's most
+prominent residents since the mid-1800s. Edmund Brackenhollow
+established Hawthorn House as a private residence in the 1860s.
+It was later converted to an inn by his descendants.
+
+Current owner: Eleanor Brackenhollow (as of October 2024).
+
+NOTES ON 1864 LAND RECORDS:
+The property transfer records from June 1864 are incomplete.
+I have not yet located a bill of sale corresponding to the
+transfer of the Hollow Tract to Edmund Brackenhollow.
+This may simply be a recordkeeping gap from the wartime period.
+I intend to discuss this with Eleanor directly before drawing
+any conclusions.
+
+Status: DRAFT — do not publish or share.` },
+
+        'brackenhollow_findings_DO_NOT_SHOW_FAMILY.txt': { type: 'file', content:
+`These are my own thoughts, not for publication yet.
+
+I keep coming back to one possibility I don't want to be true.
+Someone in this family already knows what I found. I don't think
+Eleanor was surprised when I showed her the records. I think she
+was relieved, and that isn't the reaction of someone hearing
+this for the first time.
+
+If someone has known for this long and said nothing, I have to
+wonder what else they'd be willing to do to keep it that way.
+
+flag{do_not_show}` },
+      }},
+    }},
+
+    'correspondence': { type: 'dir', children: {
+
+      '1850s': { type: 'dir', children: {
+        'general_town_business.txt': { type: 'file', content:
+`[TRANSCRIBED CORRESPONDENCE — 1850s]
+General town business letters, Foxglove Hollow.
+
+These letters concern road repairs, mill operations, and local
+trade matters from the 1850s. No content related to land disputes
+or the Brackenhollow family has been found in this collection.
+
+12 letters total. Transcription complete.` },
+      }},
+
+      '1864': { type: 'dir', children: {
+        'land_dispute_letter.txt': { type: 'file', content:
+`[TRANSCRIBED FROM ORIGINAL — handwritten, ink on paper]
+[Original held in Archive collection, Box 14, Folder 3]
+
+August 14, 1864
+
+Dear R.,
+
+I write to you about a matter that has troubled me these past weeks.
+
+You will recall the woman who held the Hollow Tract — Josephine
+Ferris, a free woman, who purchased that land fairly back in 1858.
+I saw the deed myself. She paid a fair price and had the right
+to be there.
+
+With the cavalry passing through in June and the confusion that
+followed, I understand the county records were updated — the tract
+now shows under Edmund Brackenhollow's name. But I have not heard
+anyone say she was paid, or that she agreed to leave. Her house
+stood empty by July. No one seems to know where she went.
+
+I asked Edmund about it directly. He said the matter was settled
+during a difficult time and it is best left alone now. That is
+not an answer that satisfies me.
+
+If you have any knowledge of what became of Josephine Ferris or
+of any payment made to her, I would be grateful to hear it.
+The land dispute near the millrace is not a small thing to set aside.
+
+Yours,
+A. Wren
+
+flag{land_dispute}` },
+      }},
+
+      '1900s': { type: 'dir', children: {
+        'unrelated_family_letters.txt': { type: 'file', content:
+`[TRANSCRIBED CORRESPONDENCE — early 1900s]
+Various families, Foxglove Hollow.
+
+These letters concern property, family business, and local affairs
+among several Foxglove Hollow families in the early twentieth century.
+No content relevant to the Brackenhollow family or the Hollow Tract
+has been identified in this collection.
+
+27 letters total. Transcription in progress.` },
+      }},
+    }},
+
+    'photos': { type: 'dir', children: {
+      'house_archive': { type: 'dir', children: {
+
+        'hawthorn_house_1920.png': { type: 'image', src: 'images/hawthorn_house_1920.png', note:
+`[IMAGE FILE — hawthorn_house_1920.png]
+A plain photograph of Hawthorn House, taken around 1920.
+No hidden data in this file — included for visual reference only.
+
+Type: download hawthorn_house_1920.png
+to save this image.` },
+
+        'hawthorn_house_1945.png': { type: 'image', src: 'images/hawthorn_house_1945.png', note:
+`[IMAGE FILE — hawthorn_house_1945.png]
+A photograph of the side gate at Hawthorn House, taken in 1945.
+
+This file DOES contain a hidden message encoded with
+MobileFish steganography. Use the MobileFish decoder
+(not Beautify — they are not compatible) to extract it.
+
+Type: download hawthorn_house_1945.png
+to save this image and run it through the decoder.` },
+
+        'hawthorn_house_1958.png': { type: 'image', src: 'images/hawthorn_house_1958.png', note:
+`[IMAGE FILE — hawthorn_house_1958.png]
+A photograph of Hawthorn House, taken in 1958.
+Caption: Donated to the archive by E. Brackenhollow. Photographer unknown.
+
+This file DOES contain a hidden message encoded with
+MobileFish steganography. Use the MobileFish decoder
+(not Beautify — they are not compatible) to extract it.
+This one matters.
+
+Type: download hawthorn_house_1958.png
+to save this image and run it through the decoder.` },
+
+        'town_parade_1962.png': { type: 'image', src: 'images/town_parade_1962.png', note:
+`[IMAGE FILE — town_parade_1962.png]
+A plain photograph of a Foxglove Hollow town event, 1962.
+No hidden data in this file.
+
+Type: download town_parade_1962.png
+to save this image if you'd like to check it anyway.` },
+      }},
+    }},
+
+    'town_records': { type: 'dir', children: {
+      'unrelated_families': { type: 'dir', children: {
+        'castellan_family_notes.txt': { type: 'file', content:
+`CASTELLAN FAMILY — ARCHIVE NOTES
+
+Records for the Castellan family of Foxglove Hollow, 1830s–1910s.
+This is a different family from any current residents.
+Land holdings, census entries, and church records on file.
+No connection to the Brackenhollow property has been found.
+
+3 folders, partially digitized.` },
+
+        'whitfield_family_notes.txt': { type: 'file', content:
+`WHITFIELD FAMILY — ARCHIVE NOTES
+
+Records for the Whitfield family of Foxglove Hollow, 1850s–1920s.
+This is a different family from current Archive staff.
+Land holdings and census records on file.
+
+2 folders, digitized.` },
+
+        'mill_records_1870.txt': { type: 'file', content:
+`FOXGLOVE HOLLOW MILL — OPERATING RECORDS, 1870
+
+Account ledger for the Foxglove Hollow grist mill, season of 1870.
+Customers listed by surname with bushel quantities and payment notes.
+No connection to the Brackenhollow property or Hollow Tract.
+
+Donated by the Dunmore family estate, 2018.` },
+      }},
+    }},
+
+    'archive_metadata': { type: 'dir', children: {
+      'catalog_index.txt': { type: 'file', content:
+`FOXGLOVE HOLLOW HISTORICAL ARCHIVE
+Master Catalog Index — October 2024
+
+Total collections on file: 214
+Collections fully digitized: 43
+Collections partially digitized: 78
+Collections not yet started: 93
+
+Last updated: October 1, 2024
+Contact archive director with questions about specific collections.` },
+
+      'donor_log.txt': { type: 'file', content:
+`DONOR LOG — Foxglove Hollow Historical Archive
+
+2023–2024 donations received:
+- Dunmore estate: 4 boxes, mill records and family letters
+- Anonymous: Civil War era newspaper clippings
+- Town Hall: Duplicate copies of 1890–1910 permit records
+- E. Brackenhollow: 1 box, attic materials (processing in progress)
+- Historical Society chapter: 2 boxes, meeting minutes 1970–2000
+
+Thank you to all donors for supporting the Archive's mission.` },
+    }},
+
+  }
+};
+
+// ═══════════════════════════
+// TERMINAL ENGINE
+// ═══════════════════════════
+let cwd = [];
+
+function getNode(pathArr) {
+  let node = FS;
+  for (const part of pathArr) {
+    if (node.type !== 'dir' || !node.children[part]) return null;
+    node = node.children[part];
+  }
+  return node;
+}
+
+function currentDir() { return getNode(cwd); }
+function promptStr() {
+  const path = cwd.length === 0 ? '~' : '~/' + cwd.join('/');
+  return `archive@fhha:${path}$`;
+}
+function updatePrompt() { document.getElementById('prompt-display').textContent = promptStr(); }
+
+const output = document.getElementById('output');
+
+function printLine(text, cls = 'line-output') {
+  const div = document.createElement('div');
+  div.className = `line ${cls}`;
+  div.textContent = text;
+  output.appendChild(div);
+}
+
+function scrollToBottom() {
+  const t = document.getElementById('terminal');
+  t.scrollTop = t.scrollHeight;
+}
+
+function handleCommand(raw) {
+  const cmd = raw.trim();
+  if (!cmd) return;
+  printLine(`${promptStr()} ${cmd}`, 'line-cmd');
+  const parts = cmd.split(/\s+/);
+  const verb = parts[0].toLowerCase();
+  const arg = parts.slice(1).join(' ');
+  if (verb === 'help') cmdHelp();
+  else if (verb === 'pwd') cmdPwd();
+  else if (verb === 'ls') cmdLs();
+  else if (verb === 'cd') cmdCd(arg);
+  else if (verb === 'cat' || verb === 'less') cmdCat(arg);
+  else if (verb === 'download') cmdDownload(arg);
+  else if (verb === 'clear') output.innerHTML = '';
+  else {
+    printLine(`Command not found: ${verb}`, 'line-error');
+    printLine(`Type 'help' for a list of supported commands.`, 'line-hint');
+  }
+  updatePrompt();
+  scrollToBottom();
+}
+
+function cmdHelp() {
+  printLine('');
+  printLine('Supported commands:', 'line-system');
+  printLine('  ls                — list files in the current folder');
+  printLine('  cd [folder]       — open a folder  (use cd .. to go back)');
+  printLine('  cat [file]        — read a text file');
+  printLine('  less [file]       — same as cat');
+  printLine('  pwd               — show your current location');
+  printLine('  download [file]   — save a file to your computer');
+  printLine('  clear             — clear the screen');
+  printLine('  help              — show this list');
+  printLine('');
+}
+
+function cmdPwd() {
+  const path = cwd.length === 0 ? '/home' : '/home/' + cwd.join('/');
+  printLine(path);
+}
+
+function cmdLs() {
+  const dir = currentDir();
+  if (!dir || dir.type !== 'dir') { printLine('Error: not a directory.', 'line-error'); return; }
+  const entries = Object.entries(dir.children);
+  if (entries.length === 0) { printLine('(empty folder)', 'line-hint'); return; }
+  printLine('');
+  const dirs  = entries.filter(([,v]) => v.type === 'dir').map(([k]) => k + '/');
+  const files = entries.filter(([,v]) => v.type !== 'dir').map(([k]) => k);
+  const all   = [...dirs, ...files];
+  const colWidth = Math.max(...all.map(s => s.length)) + 4;
+  const cols = 3;
+  for (let i = 0; i < all.length; i += cols) {
+    const row = all.slice(i, i + cols);
+    printLine('  ' + row.map(name => name.padEnd(colWidth)).join(''));
+  }
+  printLine('');
+}
+
+function cmdCd(arg) {
+  if (!arg) { cwd = []; return; }
+  if (arg === '..') { if (cwd.length > 0) cwd.pop(); else printLine('Already at the top level.', 'line-hint'); return; }
+  const parts = arg.split('/').filter(Boolean);
+  let testPath = [...cwd];
+  for (const part of parts) {
+    if (part === '..') { if (testPath.length) testPath.pop(); continue; }
+    const node = getNode([...testPath, part]);
+    if (!node) { printLine(`cd: ${arg}: No such folder.`, 'line-error'); return; }
+    if (node.type !== 'dir') { printLine(`cd: ${arg}: Not a folder.`, 'line-error'); return; }
+    testPath.push(part);
+  }
+  cwd = testPath;
+}
+
+function cmdCat(arg) {
+  if (!arg) { printLine('Usage: cat [filename]', 'line-error'); return; }
+  const dir = currentDir();
+  if (!dir || !dir.children[arg]) {
+    printLine(`cat: ${arg}: File not found.`, 'line-error');
+    printLine(`Type 'ls' to see what's in this folder.`, 'line-hint');
+    return;
+  }
+  const node = dir.children[arg];
+  if (node.type === 'dir') { printLine(`cat: ${arg}: That's a folder. Use 'cd ${arg}' to open it.`, 'line-error'); return; }
+  const text = node.type === 'image' ? node.note : node.content;
+  printLine('');
+  printLine('─'.repeat(56), 'line-separator');
+  text.split('\n').forEach(line => {
+    if (line.startsWith('flag{')) printLine(line, 'line-flag');
+    else printLine(line);
+  });
+  printLine('─'.repeat(56), 'line-separator');
+  printLine('');
+}
+
+function cmdDownload(arg) {
+  if (!arg) { printLine('Usage: download [filename]', 'line-error'); return; }
+  const dir = currentDir();
+  if (!dir || !dir.children[arg]) { printLine(`download: ${arg}: File not found.`, 'line-error'); return; }
+  const node = dir.children[arg];
+  if (node.type === 'image') {
+    const a = document.createElement('a');
+    a.href = node.src || `images/${arg}`;
+    a.download = arg; a.click();
+    printLine(`Downloading ${arg}...`, 'line-success');
+    printLine(`Check your Downloads folder. Run it through the MobileFish decoder.`, 'line-hint');
+  } else {
+    const blob = new Blob([node.content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = arg; a.click();
+    URL.revokeObjectURL(url);
+    printLine(`Downloading ${arg}...`, 'line-success');
+  }
+}
+
+// Boot sequence
+const input = document.getElementById('cmd-input');
+input.addEventListener('keydown', e => {
+  if (e.key === 'Enter') { handleCommand(input.value); input.value = ''; }
+});
+document.getElementById('terminal').addEventListener('click', () => input.focus());
+
+function boot() {
+  const lines = [
+    ['', 'line-blank'],
+    ['  ✦  FOXGLOVE HOLLOW HISTORICAL ARCHIVE', 'line-system'],
+    ['     Remote Records Access System', 'line-hint'],
+    ['', 'line-blank'],
+    ['  Access granted. Welcome, researcher.', 'line-system'],
+    ['', 'line-blank'],
+    ['  The Archive contains digitized records from', 'line-output'],
+    ['  1840 to the present. Most collections are open.', 'line-output'],
+    ['  A few are restricted. Explore carefully.', 'line-output'],
+    ['', 'line-blank'],
+    ["  Type 'ls' to see what's here.", 'line-hint'],
+    ["  Type 'help' for a list of commands.", 'line-hint'],
+    ['', 'line-blank'],
+  ];
+  let i = 0;
+  function next() {
+    if (i < lines.length) { printLine(lines[i][0], lines[i][1]); i++; scrollToBottom(); setTimeout(next, 60); }
+    else updatePrompt();
+  }
+  next();
+}
+boot();
+</script>
+</body>
+</html>

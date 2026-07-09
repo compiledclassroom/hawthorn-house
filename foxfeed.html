@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FoxFeed — Foxglove Hollow Community</title>
+<style>
+  /* ── RESET & BASE ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --primary:      #2A5C4E;
+    --primary-lt:   #3A7A68;
+    --accent:       #C8960A;
+    --bg:           #EDE8E0;
+    --card:         #FFFFFF;
+    --border:       #D8D0C4;
+    --text:         #1A1208;
+    --muted:        #6B5D50;
+    --link:         #2A5C4E;
+    --breaking:     #CC2200;
+    --sponsored-bg: #F5F7F5;
+    --radius:       10px;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  /* ── ARCHIVE BANNER ── */
+  .archive-bar {
+    background: #3a2c1a;
+    color: #c8b890;
+    font-size: 15px;
+    text-align: center;
+    padding: 8px 16px;
+    letter-spacing: 0.3px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--primary);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  }
+  .header-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 16px;
+    height: 66px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .logo-icon {
+    width: 42px; height: 42px;
+    background: var(--accent);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+  }
+  .logo-text { color: #fff; font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
+  .logo-sub  { color: rgba(255,255,255,0.65); font-size: 14px; margin-top: -2px; }
+
+  nav { display: flex; gap: 4px; }
+  nav a {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-size: 17px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    transition: background 0.15s;
+  }
+  nav a:hover { background: rgba(255,255,255,0.12); color: #fff; }
+
+  /* ── SEARCH ── */
+  .search-wrap {
+    display: flex; align-items: center;
+    background: rgba(255,255,255,0.15);
+    border-radius: 20px;
+    padding: 5px 14px;
+    gap: 6px;
+  }
+  .search-wrap input {
+    background: transparent; border: none; outline: none;
+    color: #fff; font-size: 14px; width: 160px;
+  }
+  .search-wrap input::placeholder { color: rgba(255,255,255,0.55); }
+
+  /* ── TRENDING BAR ── */
+  .trending-bar {
+    background: var(--primary);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding: 0;
+  }
+  .trending-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .trending-label {
+    color: rgba(255,255,255,0.65);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-right: 4px;
+  }
+  .trending-tag {
+    color: #9FD4C8;
+    font-size: 15px;
+    padding: 3px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(159,212,200,0.3);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+  .trending-tag:hover { background: rgba(255,255,255,0.1); }
+
+  /* ── LAYOUT ── */
+  .page-wrap {
+    max-width: 640px;
+    margin: 24px auto;
+    padding: 0 16px 60px;
+  }
+
+  /* ── POST CARD ── */
+  .post {
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    margin-bottom: 16px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .post-inner { padding: 16px 16px 0; }
+
+  /* ── BADGES ── */
+  .badge-breaking {
+    display: inline-block;
+    background: var(--breaking);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .badge-sponsored {
+    display: inline-block;
+    background: #E8F0E8;
+    color: #3A6040;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-bottom: 10px;
+    border: 1px solid #C0D4C0;
+  }
+
+  /* ── POST HEADER ── */
+  .post-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    margin-bottom: 11px;
+  }
+  .avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 2px solid var(--border);
+  }
+  .avatar-css {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700; color: #fff;
+    border: 2px solid var(--border);
+  }
+  .post-byline { flex: 1; }
+  .display-name {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--text);
+    display: block;
+  }
+  .handle-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .handle {
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .dot { color: var(--border); font-size: 12px; }
+  .timestamp { color: var(--muted); font-size: 13px; }
+  .location {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 12px;
+    color: var(--primary);
+    font-weight: 500;
+  }
+
+  /* ── POST BODY ── */
+  .post-body {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text);
+    margin-bottom: 14px;
+  }
+  .post-body a {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .post-body a:hover { text-decoration: underline; }
+
+  /* ── POST IMAGE ── */
+  .post-img {
+    width: 100%;
+    border-radius: 8px;
+    display: block;
+    margin-bottom: 14px;
+    max-height: 320px;
+    object-fit: cover;
+  }
+
+  /* ── LINK PREVIEW ── */
+  .link-preview {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 14px;
+    text-decoration: none;
+    display: block;
+    transition: box-shadow 0.15s;
+  }
+  .link-preview:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+  .link-preview img { width: 100%; max-height: 200px; object-fit: cover; display: block; }
+  .link-preview-meta { padding: 10px 14px; }
+  .link-preview-domain { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .link-preview-title { font-size: 15px; font-weight: 600; color: var(--text); margin: 3px 0 2px; }
+  .link-preview-desc { font-size: 13px; color: var(--muted); }
+
+  /* ── REACTIONS ── */
+  .reactions {
+    border-top: 1px solid var(--border);
+    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+  .react-btn {
+    background: none; border: none; cursor: pointer;
+    display: flex; align-items: center; gap: 5px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 500;
+    transition: background 0.12s, color 0.12s;
+  }
+  .react-btn:hover { background: #F0EBE4; color: var(--primary); }
+  .react-btn.liked { color: #CC2200; }
+  .react-btn span { font-size: 12px; }
+  .react-emoji { font-size: 16px; }
+
+  /* ── COMMENTS ── */
+  .comments {
+    border-top: 1px solid var(--border);
+    background: #FAFAF8;
+    padding: 10px 16px 12px;
+  }
+  .comment {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    margin-bottom: 10px;
+  }
+  .comment:last-child { margin-bottom: 0; }
+  .comment-avatar {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+  }
+  .comment-avatar-css {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: #fff;
+    border: 1px solid var(--border);
+  }
+  .comment-bubble {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 7px 12px;
+    flex: 1;
+  }
+  .comment-author {
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--primary);
+    margin-right: 6px;
+  }
+  .comment-text {
+    font-size: 14px;
+    color: var(--text);
+  }
+  .comment-time {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+  /* Ruth's suspicious early comment */
+  .comment-time.suspicious {
+    color: #8B1A1A;
+    font-weight: 600;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 32px 16px 16px;
+    color: var(--muted);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  footer a { color: var(--muted); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<!-- ── ARCHIVE BANNER ── -->
+<div class="archive-bar">
+  You are viewing an archived snapshot of FoxFeed · October 9, 2024 · Foxglove Hollow, Maryland
+</div>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="header-inner">
+    <a href="#" class="logo">
+      <div class="logo-icon">🦊</div>
+      <div>
+        <div class="logo-text">FoxFeed</div>
+        <div class="logo-sub">Foxglove Hollow Community</div>
+      </div>
+    </a>
+    <div class="search-wrap">
+      <svg width="14" height="14" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" placeholder="Search FoxFeed..." readonly>
+    </div>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Community</a>
+      <a href="#">About</a>
+    </nav>
+  </div>
+
+  <!-- Trending bar -->
+  <div class="trending-bar">
+    <div class="trending-inner">
+      <span class="trending-label">Trending</span>
+      <a class="trending-tag" href="#">#EleanorBrackenhollow</a>
+      <a class="trending-tag" href="#">#HawthornHouse</a>
+      <a class="trending-tag" href="#">#FoxgloveHollow</a>
+      <a class="trending-tag" href="#">#FogAdvisory</a>
+      <a class="trending-tag" href="#">#JosephineFerris</a>
+    </div>
+  </div>
+</header>
+
+<!-- ── FEED ── -->
+<div class="page-wrap">
+
+  <!-- ══ POST 1: BREAKING NEWS ══ -->
+  <div class="post">
+    <div class="post-inner">
+      <div class="badge-breaking">🔴 Breaking News</div>
+      <div class="post-head">
+        <div class="avatar-css" style="background:#1A2A4A;">📰</div>
+        <div class="post-byline">
+          <span class="display-name">The Foxglove Chronicle</span>
+          <div class="handle-row">
+            <span class="handle">@FoxgloveChronicle</span>
+            <span class="dot">·</span>
+            <span class="timestamp">Oct 9 · 8:15am</span>
+          </div>
+        </div>
+      </div>
+      <div class="post-body">
+        BREAKING: Eleanor Brackenhollow, 79, owner of the historic Hawthorn House inn, was found unresponsive at her home this morning. Authorities have been called to the scene. No further details have been confirmed. We will update this post as information becomes available. Our thoughts are with her family and the Foxglove Hollow community.
+      </div>
+    </div>
+    <div class="reactions">
+      <button class="react-btn" onclick="toggleLike(this, 234)"><span class="react-emoji">❤️</span><span>234</span></button>
+      <button class="react-btn"><span class="react-emoji">💬</span><span>5 comments</span></button>
+      <button class="react-btn"><span class="react-emoji">↗</span><span>Share</span></button>
+    </div>
+    <div class="comments">
+
+      <!-- Ruth's comment — timestamp is BEFORE the article posted -->
+      <div class="comment">
+        <img class="comment-avatar" src="images/ruth-portrait.jpg" alt="Ruth">
+        <div class="comment-bubble">
+          <a class="comment-author" href="ruth-castellan-antiques.html" style="color:var(--primary);text-decoration:none;">@RuthCastellanAntiques</a>
+          <span class="comment-text">I can't believe this.</span>
+          <span class="comment-time suspicious">Oct 9 · 8:07am</span>
+        </div>
+      </div>
+
+      <div class="comment">
+        <img class="comment-avatar" src="images/nate-portrait.jpg" alt="Nate">
+        <div class="comment-bubble">
+          <span class="comment-author">@NateCalloway</span>
+          <span class="comment-text">She was alive when I left at 9 last night. I am heartbroken.</span>
+          <span class="comment-time">Oct 9 · 8:22am</span>
+        </div>
+      </div>
+
+      <div class="comment">
+        <img class="comment-avatar" src="images/owen-portrait.jpg" alt="Owen">
+        <div class="comment-bubble">
+          <span class="comment-author">@OwenB_Design</span>
+          <span class="comment-text">Please give our family privacy right now.</span>
+          <span class="comment-time">Oct 9 · 8:31am</span>
+        </div>
+      </div>
+
+      <div class="comment">
+        <img class="comment-avatar" src="images/dahlia-portrait.jpg" alt="Dahlia">
+        <div class="comment-bubble">
+          <span class="comment-author">@DahliaWrites</span>
+          <span class="comment-text">This is devastating. Truly.</span>
+          <span class="comment-time">Oct 9 · 8:44am</span>
+        </div>
+      </div>
+
+      <div class="comment">
+        <img class="comment-avatar" src="images/jonas-portrait.jpg" alt="Jonas">
+        <div class="comment-bubble">
+          <span class="comment-author">@JonasMbeki</span>
+          <span class="comment-text">I only just met her. I'm so sorry, Owen.</span>
+          <span class="comment-time">Oct 9 · 9:02am</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ POST 2: HAWTHORN HOUSE INN (pinned) ══ -->
+  <div class="post">
+    <div class="post-inner">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+        <span style="font-size:14px;color:var(--muted);font-weight:600;">📌 Pinned post</span>
+      </div>
+      <div class="post-head">
+        <a href="index.html" style="text-decoration:none;"><div class="avatar-css" style="background:#8B3A1A;font-size:14px;">HH</div></a>
+        <div class="post-byline">
+          <span class="display-name">Hawthorn House Inn</span>
+          <div class="handle-row">
+            <span class="handle">@HawthornHouseInn</span>
+            <span class="dot">·</span>
+            <span class="timestamp">Sep 15 · 10:30am</span>
+          </div>
+        </div>
+      </div>
+      <div class="post-body">Come stay with us in Foxglove Hollow, Maryland! 🌿 Hawthorn House has been welcoming guests since 1858 — a Victorian inn with 160 years of history, beautiful grounds, and stories in every room. Learn more and plan your visit below.</div>
+      <a class="link-preview" href="index.html">
+        <img src="images/hero-house.jpg" alt="Hawthorn House">
+        <div class="link-preview-meta">
+          <div class="link-preview-domain">compiledclassroom.github.io</div>
+          <div class="link-preview-title">Hawthorn House — Foxglove Hollow, Maryland</div>
+          <div class="link-preview-desc">A Victorian inn established in 1858. History, mystery, and quiet in the Maryland hills.</div>
+        </div>
+      </a>
+    </div>
+    <div class="reactions">
+      <button class="react-btn" onclick="toggleLike(this,156)"><span class="react-emoji">❤️</span><span>156</span></button>
+      <button class="react-btn"><span class="react-emoji">💬</span><span>2 comments</span></button>
+      <button class="react-btn"><span class="react-emoji">↗</span><span>Share</span></button>
+    </div>
+    <div class="comments">
+      <div class="comment">
+        <img class="comment-avatar" src="images/dahlia-portrait.jpg" alt="Dahlia">
+        <div class="comment-bubble"><span class="comment-author">@DahliaWrites</span><span class="comment-text">Just booked! Can't wait. ✨</span><span class="comment-time">Sep 15 · 11:02am</span></div>
+      </div>
+      <div class="comment">
+        <img class="comment-avatar" src="images/jonas-portrait.jpg" alt="Jonas">
+        <div class="comment-bubble"><span class="comment-author">@JonasMbeki</span><span class="comment-text">There's more history here than the brochure lets on. flag{foxfeed_found}</span><span class="comment-time">Oct 3 · 8:17am</span></div>
+      </div>
+      <div class="comment">
+        <div class="comment-avatar-css" style="background:#7A6A5A;">?</div>
+        <div class="comment-bubble"><span class="comment-author">@foxglove_resident22</span><span class="comment-text">We stayed here last fall. If you look carefully at the website, there's more going on than meets the eye. flag{foxfeed_found}</span><span class="comment-time">Sep 18 · 3:22pm</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ POST 3: RUTH MIDNIGHT POST ══ -->
+  <div class="post">
+    <div class="post-inner">
+      <div class="post-head">
+        <img class="avatar" src="images/ruth-portrait.jpg" alt="Ruth">
+        <div class="post-byline">
+          <span class="display-name">Ruth Castellan Antiques</span>
+          <div class="handle-row">
+            <a class="handle" href="ruth-castellan-antiques.html" style="color:var(--primary);font-weight:600;">@RuthCastellanAntiques</a>
+            <span class="dot">·</span>
+            <span class="timestamp">Oct 8 · 11:47pm</span>
+            <span class="dot">·</span>
+            <span class="location">📍 Hawthorn House, Foxglove Hollow</span>
+          </div>
+        </div>
+      </div>
+      <div class="post-body">
+        Thinking about family tonight. 🏠
+      </div>
+    </div>
+    <div class="reactions">
+      <button class="react-btn" onclick="toggleLike(this, 8)"><span class="react-emoji">❤️</span><span>8</span></button>
+      <button class="react-btn"><span class="react-emoji">💬</span><span>2 comments</span></button>
+      <button class="react-btn"><span class="react-emoji">↗</span><span>Share</span></button>
+    </div>
+    <div class="comments">
+
+      <div class="comment">
+        <img class="comment-avatar" src="images/owen-portrait.jpg" alt="Owen">
+        <div class="comment-bubble">
+          <span class="comment-author">@OwenB_Design</span>
+          <span class="comment-text">Ruth it's past midnight. Get some rest.</span>
+          <span class="comment-time">Oct 8 · 11:52pm</span>
+        </div>
+      </div>
+
+      <div class="comment">
+        <img class="comment-avatar" src="images/ruth-portrait.jpg" alt="Ruth">
+        <div class="comment-bubble">
+          <a class="comment-author" href="ruth-castellan-antiques.html" style="color:var(--primary);text-decoration:none;">@RuthCastellanAntiques</a>
+          <span class="comment-text">Can't sleep. Thinking about what's ours.</span>
+          <span class="comment-time">Oct 9 · 12:03am</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ POST 3: DAHLIA FIREPLACE ══ -->
+  <div class="post">
+    <div class="post-inner">
+      <div class="post-head">
+        <img class="avatar" src="images/dahlia-portrait.jpg" alt="Dahlia">
+        <div class="post-byline">
+          <span class="display-name">Dahlia Park — Writes</span>
+          <div class="handle-row">
+            <span class="handle">@DahliaWrites</span>
+            <span class="dot">·</span>
+            <span class="timestamp">Oct 8 · 9:15pm</span>
+          </div>
+        </div>
+      </div>
+      <div class="post-body">
+        Writing into the night at the most extraordinary old house. This hearth must have seen a hundred years of secrets. 🕯️
+      </div>
+    </div>
+    <div class="reactions">
+      <button class="react-btn" onclick="toggleLike(this, 31)"><span class="react-emoji">❤️</span><span>31</span></button>
+      <button class="react-btn"><span class="react-emoji">💬</span><span>2 comments</span></button>
+      <button class="react-btn"><span class="react-emoji">↗</span><span>Share</span></button>
+    </div>
+    <div class="comments">
+
+      <div class="comment">
+        <img class="comment-avatar" src="images/owen-portrait.jpg" alt="Owen">
+        <div class="comment-bubble">
+          <span class="comment-author">@OwenB_Design</span>
+          <span class="comment-text">Grandma calls that one the heart of the house. Says the hearth remembers what the house forgets.</span>
+          <span class="comment-time">Oct 8 · 9:42pm</span>
+        </div>
+      </div>
+
+      <div class="comment">
+        <img class="comment-avatar" src="images/dahlia-portrait.jpg" alt="Dahlia">
+        <div class="comment-bubble">
+          <span class="comment-author">@DahliaWrites</span>
+          <span class="comment-text">What does she mean by that?</span>
+          <span class="comment-time">Oct 8 · 9:44pm</span>
+        </div>
+      </div>
+      <!-- Owen never replied -->
+
+    </div>
+  </div>
+
+  <!-- ══ POST 4: HOLLOW & PIERCE REALTY ══ -->
+  <!-- DEVELOPER NOTE: Received listing agreement docs from R. Castellan, 2:34pm Oct 8. Property: Hawthorn House, Foxglove Hollow. Client states transfer is "expected imminently." Awaiting probate confirmation before going public. Do not publish this comment. — H&P Digital Team -->
+  <div class="post">
+    <div class="post-inner">
+      <div class="post-head">
+        <a href="hollow-pierce.html" style="text-decoration:none;"><div class="avatar-css" style="background:#3A5A3A; font-size:13px;">H&amp;P</div></a>
+        <div class="post-byline">
+          <span class="display-name">Hollow &amp; Pierce Realty</span>
+          <div class="handle-row">
+            <a class="handle" href="hollow-pierce.html" style="color:var(--primary);font-weight:600;">@HollowPierceRealty</a>
+            <span class="dot">·</span>
+            <span class="timestamp">Oct 8 · 2:14pm</span>
+          </div>
+        </div>
+      </div>
+      <div class="post-body">
+        Exciting news on the horizon for Foxglove Hollow! A truly historic property listing is coming next week. We couldn't be more thrilled to bring this one to market. 🏡 Stay tuned. <a href="#">#FoxgloveHollow</a> <a href="#">#HistoricHomes</a> <a href="#">#MarylandRealEstate</a>
+      </div>
+    </div>
+    <div class="reactions">
+      <button class="react-btn" onclick="toggleLike(this, 14)"><span class="react-emoji">❤️</span><span>14</span></button>
+      <button class="react-btn"><span class="react-emoji">💬</span><span>3 comments</span></button>
+      <button class="react-btn"><span class="react-emoji">↗</span><span>Share</span></button>
+    </div>
+    <div class="comments">
+
+      <div class="comment">
+        <div class="comment-avatar-css" style="background:#7A6A5A;">?</div>
+        <div class="comment-bubble">
+          <span class="comment-author">@foxglove_resident22</span>
+          <span class="comment-text">Which property? This is the first anyone has heard of this.</span>
+          <span class="comment-time">Oct 8 · 2:31pm</span>
+        </div>
+      </div>
+
+      <div class="comment">
+        <img class="comment-avatar" src="images/priya-portrait.jpg" alt="Priya">
+        <div class="comment-bubble">
+          <span class="comment-author">@PriyaWhitfield_FHHA</span>
+          <span class="comment-text">I hope whoever is selling has done their homework on the full title history. Some records in this area are more complicated than they appear.</span>
+          <span class="comment-time">Oct 8 · 3:02pm</span>
+        </div>
+      </div>
+
+      <div class="comment">
+        <img class="comment-avatar" src="images/ruth-portrait.jpg" alt="Ruth">
+        <div class="comment-bubble">
+          <a class="comment-author" href="ruth-castellan-antiques.html" style="color:var(--primary);text-decoration:none;">@RuthCastellanAntiques</a>
+          <span class="comment-text">Change can be good for a community. 😊</span>
+          <span class="comment-time">Oct 8 · 3:18pm</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ POST 5: WEATHER ADVISORY ══ -->
+  <div class="post">
+    <div class="post-inner">
+      <div class="post-head">
+        <div class="avatar-css" style="background:#2A6080;">🌫️</div>
+        <div class="post-byline">
+          <span class="display-name">Foxglove Weather Service</span>
+          <div class="handle-row">
+            <span class="handle">@FoxgloveWeather</span>
+            <span class="dot">·</span>
+            <span class="timestamp">Oct 8 · 11:00am</span>
+          </div>
+        </div>
+      </div>
+      <div class="post-body">
+        ⚠️ ADVISORY — Dense fog is expected to develop across Foxglove Hollow after midnight tonight, with visibility dropping to near zero near the millrace and lower elevations. Temperatures will fall to 34°F by 2am. Use extreme caution if traveling after dark.
+      </div>
+    </div>
+    <div class="reactions">
+      <button class="react-btn" onclick="toggleLike(this, 45)"><span class="react-emoji">❤️</span><span>45</span></button>
+      <button class="react-btn"><span class="react-emoji">💬</span><span>1 comment</span></button>
+      <button class="react-btn"><span class="react-emoji">↗</span><span>Share</span></button>
+    </div>
+    <div class="comments">
+
+      <div class="comment">
+        <img class="comment-avatar" src="images/nate-portrait.jpg" alt="Nate">
+        <div class="comment-bubble">
+          <span class="comment-author">@NateCalloway</span>
+          <span class="comment-text">Already feels like it's coming in early. Quiet night out here on the property.</span>
+          <span class="comment-time">Oct 8 · 11:14am</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ POST 6: MERIDIAN LAND GROUP — SPONSORED ══ -->
+  <div class="post" style="background:#FAFDF8;">
+    <div class="post-inner">
+      <div class="badge-sponsored">Sponsored</div>
+      <div class="post-head">
+        <a href="meridian-land.html" style="text-decoration:none;"><div class="avatar-css" style="background:#4A5A6A; font-size:12px;">MLG</div></a>
+        <div class="post-byline">
+          <span class="display-name">Meridian Land Group</span>
+          <div class="handle-row">
+            <a class="handle" href="meridian-land.html" style="color:var(--primary);font-weight:600;">@MeridianLandGroup</a>
+            <span class="dot">·</span>
+            <span class="timestamp">Oct 8 · 9:03am</span>
+          </div>
+        </div>
+      </div>
+      <div class="post-body">
+        Meridian Land Group is proud to be expanding into Maryland's most historic communities. We believe in preserving the character of places like Foxglove Hollow — while unlocking their full potential. One landmark property is about to change hands. More soon. 🌿 <a href="#">#HistoricMD</a> <a href="#">#HeritageRealEstate</a>
+      </div>
+    </div>
+    <div class="reactions">
+      <button class="react-btn" onclick="toggleLike(this, 5)"><span class="react-emoji">❤️</span><span>5</span></button>
+      <button class="react-btn"><span class="react-emoji">💬</span><span>2 comments</span></button>
+      <button class="react-btn"><span class="react-emoji">↗</span><span>Share</span></button>
+    </div>
+    <div class="comments">
+
+      <div class="comment">
+        <div class="comment-avatar-css" style="background:#7A6A5A;">?</div>
+        <div class="comment-bubble">
+          <span class="comment-author">@foxglove_resident22</span>
+          <span class="comment-text">Nobody asked developers to come here. Which property??</span>
+          <span class="comment-time">Oct 8 · 9:47am</span>
+        </div>
+      </div>
+
+      <div class="comment">
+        <img class="comment-avatar" src="images/ruth-portrait.jpg" alt="Ruth">
+        <div class="comment-bubble">
+          <a class="comment-author" href="ruth-castellan-antiques.html" style="color:var(--primary);text-decoration:none;">@RuthCastellanAntiques</a>
+          <span class="comment-text">Foxglove Hollow deserves smart investment. Not everything old should stay frozen.</span>
+          <span class="comment-time">Oct 8 · 10:12am</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ POST 7: JONAS FIELD POST ══ -->
+  <div class="post">
+    <div class="post-inner">
+      <div class="post-head">
+        <img class="avatar" src="images/jonas-portrait.jpg" alt="Jonas">
+        <div class="post-byline">
+          <span class="display-name">Jonas Mbeki</span>
+          <div class="handle-row">
+            <span class="handle">@JonasMbeki</span>
+            <span class="dot">·</span>
+            <span class="timestamp">Oct 3 · 12:08pm</span>
+            <span class="dot">·</span>
+            <span class="location">📍 Millrace Road, Foxglove Hollow</span>
+          </div>
+        </div>
+      </div>
+      <div class="post-body">
+        Made it to Foxglove Hollow. This is the field near Millrace Road where my great-great-grandmother's land was. Her name was Josephine Ferris. She purchased this parcel legally in 1858. By 1864 it was recorded under someone else's name — no payment, no explanation. I came here to find out what happened.
+      </div>
+    </div>
+    <div class="reactions">
+      <button class="react-btn" onclick="toggleLike(this, 89)"><span class="react-emoji">❤️</span><span>89</span></button>
+      <button class="react-btn"><span class="react-emoji">💬</span><span>2 comments</span></button>
+      <button class="react-btn"><span class="react-emoji">↗</span><span>Share</span></button>
+    </div>
+    <div class="comments">
+
+      <div class="comment">
+        <div class="comment-avatar-css" style="background:#7A6A5A;">?</div>
+        <div class="comment-bubble">
+          <span class="comment-author">@foxglove_resident22</span>
+          <span class="comment-text">Never heard this story before. Welcome to Foxglove Hollow.</span>
+          <span class="comment-time">Oct 3 · 12:44pm</span>
+        </div>
+      </div>
+
+      <div class="comment">
+        <img class="comment-avatar" src="images/priya-portrait.jpg" alt="Priya">
+        <div class="comment-bubble">
+          <span class="comment-author">@PriyaWhitfield_FHHA</span>
+          <span class="comment-text">Jonas — I'd be glad to talk. Stop by the Archive when you have a chance.</span>
+          <span class="comment-time">Oct 3 · 1:15pm</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+</div><!-- end page-wrap -->
+
+<!-- ── FOOTER ── -->
+<footer>
+  <p>FoxFeed &copy; 2024 &nbsp;·&nbsp; <a href="#">Terms</a> &nbsp;·&nbsp; <a href="#">Privacy</a> &nbsp;·&nbsp; <a href="#">Help</a></p>
+  <p style="margin-top:6px; color:#9A8878;">Foxglove Hollow's community platform since 2016 &nbsp;·&nbsp; Not affiliated with any national social media network.</p>
+</footer>
+
+<script>
+function toggleLike(btn, base) {
+  const span = btn.querySelector('span');
+  if (btn.classList.contains('liked')) {
+    btn.classList.remove('liked');
+    span.textContent = base;
+  } else {
+    btn.classList.add('liked');
+    span.textContent = base + 1;
+  }
+}
+</script>
+
+</body>
+</html>

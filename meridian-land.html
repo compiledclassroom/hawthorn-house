@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meridian Land Group — Heritage Land Asset Specialists</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --slate:   #1E2D3A;
+    --slate2:  #2A3E50;
+    --teal:    #1A6A60;
+    --gold:    #C8960A;
+    --gold2:   #D4A820;
+    --text:    #0F1A22;
+    --muted:   #4A6070;
+    --bg:      #F2F6F8;
+    --card:    #FFFFFF;
+    --border:  #D0DCE4;
+    --green:   #1B5E40;
+    --pending: #8B3A00;
+  }
+  body { font-family: Arial, Helvetica, sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    background: var(--slate);
+    padding: 8px 32px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 12px; color: rgba(255,255,255,0.5);
+  }
+  .topbar a { color: var(--gold2); text-decoration: none; margin-left: 16px; }
+
+  /* ── HEADER ── */
+  header { background: var(--slate2); box-shadow: 0 2px 12px rgba(0,0,0,0.25); position: sticky; top: 0; z-index: 100; }
+  .header-inner {
+    max-width: 1200px; margin: 0 auto; padding: 0 32px;
+    height: 68px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+  .logo-mark {
+    width: 44px; height: 44px; background: var(--gold); border-radius: 3px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 900; color: var(--slate); letter-spacing: -0.5px; line-height: 1.1; text-align: center;
+  }
+  .logo-text .name { color: #fff; font-size: 20px; font-weight: 700; letter-spacing: 0.5px; }
+  .logo-text .sub  { color: rgba(255,255,255,0.5); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; }
+  nav a {
+    color: rgba(255,255,255,0.75); text-decoration: none; font-size: 14px;
+    padding: 6px 14px; border-radius: 4px; margin-left: 4px;
+    transition: background 0.15s, color 0.15s;
+  }
+  nav a:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative; min-height: 500px; overflow: hidden;
+    background: var(--slate);
+    display: flex; align-items: center;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background-image: url('https://picsum.photos/seed/landscape-land/1400/600');
+    background-size: cover; background-position: center;
+    opacity: 0.25;
+  }
+  .hero-content {
+    position: relative; z-index: 2;
+    max-width: 1200px; margin: 0 auto; padding: 80px 32px;
+  }
+  .hero-tag {
+    display: inline-block; background: var(--gold); color: var(--slate);
+    font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+    padding: 5px 14px; border-radius: 2px; margin-bottom: 24px;
+  }
+  .hero h1 { color: #fff; font-size: 52px; font-weight: 700; line-height: 1.15; max-width: 680px; margin-bottom: 20px; }
+  .hero p  { color: rgba(255,255,255,0.72); font-size: 18px; max-width: 520px; line-height: 1.75; margin-bottom: 36px; }
+  .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--gold); color: var(--slate);
+    padding: 14px 32px; border-radius: 3px; text-decoration: none;
+    font-size: 14px; font-weight: 700; letter-spacing: 0.5px;
+    transition: background 0.15s;
+  }
+  .btn-primary:hover { background: var(--gold2); }
+  .btn-outline {
+    border: 1px solid rgba(255,255,255,0.35); color: rgba(255,255,255,0.85);
+    padding: 14px 32px; border-radius: 3px; text-decoration: none;
+    font-size: 14px; transition: border-color 0.15s, color 0.15s;
+  }
+  .btn-outline:hover { border-color: rgba(255,255,255,0.7); color: #fff; }
+
+  /* ── STATS BAR ── */
+  .stats-bar { background: var(--teal); padding: 0; }
+  .stats-inner {
+    max-width: 1200px; margin: 0 auto; padding: 0 32px;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+  }
+  .stat-item {
+    padding: 24px 16px; text-align: center;
+    border-right: 1px solid rgba(255,255,255,0.15);
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-num   { font-size: 32px; font-weight: 700; color: #fff; }
+  .stat-label { font-size: 12px; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 1px; margin-top: 3px; }
+
+  /* ── SECTIONS ── */
+  .section { max-width: 1200px; margin: 0 auto; padding: 72px 32px; }
+  .section-tag {
+    font-size: 11px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 8px;
+  }
+  .section-title { font-size: 36px; font-weight: 700; color: var(--text); margin-bottom: 14px; }
+  .section-body  { font-size: 16px; color: var(--muted); max-width: 680px; line-height: 1.85; }
+  .section-rule  { border: none; border-top: 2px solid var(--gold); width: 50px; margin: 18px 0 40px; }
+
+  /* ── SERVICES ── */
+  .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .service-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--gold);
+    padding: 28px 28px 30px;
+    transition: box-shadow 0.2s;
+  }
+  .service-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.10); }
+  .service-icon { font-size: 26px; margin-bottom: 12px; }
+  .service-name { font-size: 19px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+  .service-desc { font-size: 14px; color: var(--muted); line-height: 1.75; }
+  .service-detail { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+  .service-detail li { font-size: 13px; color: var(--muted); padding: 4px 0 4px 16px; position: relative; }
+  .service-detail li::before { content: "→"; position: absolute; left: 0; color: var(--gold); }
+
+  /* ── CURRENT MARKETS ── */
+  .markets-section { background: var(--slate); padding: 72px 0; }
+  .markets-inner { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+  .markets-inner .section-tag { color: var(--gold2); }
+  .markets-inner .section-title { color: #fff; }
+  .markets-inner .section-body { color: rgba(255,255,255,0.65); }
+  .markets-inner .section-rule { border-color: var(--gold2); }
+
+  .markets-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 40px; }
+  .market-card {
+    border-radius: 4px; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .market-img { width: 100%; height: 160px; object-fit: cover; display: block; opacity: 0.7; }
+  .market-body { background: rgba(255,255,255,0.07); padding: 20px 22px 24px; }
+  .market-location { font-size: 11px; color: var(--gold2); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+  .market-name { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 10px; }
+  .market-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+  .market-key { font-size: 12px; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.5px; }
+  .market-val { font-size: 13px; color: rgba(255,255,255,0.82); font-weight: 600; }
+  .status-badge {
+    display: inline-block;
+    font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 2px; margin-top: 14px;
+  }
+  .status-closed   { background: rgba(27,94,64,0.7);  color: #90EE90; }
+  .status-active   { background: rgba(200,150,10,0.3); color: var(--gold2); }
+  .status-pending  { background: rgba(139,58,0,0.5);  color: #FFB06A; }
+
+  /* ── FEATURED MARKET — FOXGLOVE ── */
+  .featured-market {
+    background: linear-gradient(135deg, #1A2A3A 0%, #0E1E2A 100%);
+    border: 1px solid rgba(200,150,10,0.4);
+    border-radius: 4px; padding: 36px 40px; margin-top: 28px;
+  }
+  .featured-tag {
+    display: inline-block; background: var(--gold); color: var(--slate);
+    font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+    padding: 4px 12px; border-radius: 2px; margin-bottom: 20px;
+  }
+  .featured-market h3 { color: #fff; font-size: 26px; font-weight: 700; margin-bottom: 8px; }
+  .featured-market .subtitle { color: rgba(255,255,255,0.5); font-size: 14px; margin-bottom: 28px; }
+  .featured-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; }
+  .featured-cell { padding: 16px 20px; border-right: 1px solid rgba(255,255,255,0.1); }
+  .featured-cell:last-child { border-right: none; }
+  .fcell-key { font-size: 11px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .fcell-val { font-size: 15px; color: #fff; font-weight: 600; }
+  .fcell-val.hot { color: var(--gold2); }
+  .featured-note {
+    margin-top: 24px; padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    font-size: 13px; color: rgba(255,255,255,0.45);
+    font-style: italic;
+  }
+
+  /* ── APPROACH ── */
+  .approach-section { background: var(--card); padding: 72px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .approach-inner { max-width: 1200px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+  .approach-img { width: 100%; border-radius: 4px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); }
+  .approach-text p { font-size: 15px; color: var(--muted); line-height: 1.85; margin-bottom: 14px; }
+  .approach-list { list-style: none; margin-top: 20px; }
+  .approach-list li {
+    padding: 12px 0; border-bottom: 1px solid var(--border);
+    display: flex; align-items: flex-start; gap: 12px;
+    font-size: 14px; color: var(--text);
+  }
+  .approach-list li:last-child { border-bottom: none; }
+  .approach-list li::before { content: "✦"; color: var(--gold); margin-top: 2px; flex-shrink: 0; }
+
+  /* ── DISCLOSURE ── */
+  .disclosure {
+    background: #EEF2F5; border-top: 1px solid var(--border);
+    padding: 24px 32px; font-size: 12px; color: #7A8A98;
+    max-width: 1200px; margin: 0 auto;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--text); color: rgba(255,255,255,0.45);
+    font-size: 13px; text-align: center; padding: 28px 32px;
+  }
+  footer strong { color: rgba(255,255,255,0.75); }
+  footer a { color: var(--gold2); text-decoration: none; }
+  .back-link {
+    display: inline-block; margin-bottom: 18px;
+    font-size: 14px; color: var(--gold2); text-decoration: none;
+    padding: 8px 20px; border: 1px solid var(--gold2); border-radius: 3px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ── TOPBAR ── -->
+<div class="topbar">
+  <span>Meridian Land Group &nbsp;·&nbsp; Mid-Atlantic Region &nbsp;·&nbsp; Private Institutional Land Investment</span>
+  <span>
+    <a href="#">Investor Portal</a>
+    <a href="#">Contact</a>
+    <a href="#">Careers</a>
+  </span>
+</div>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="header-inner">
+    <a href="#" class="logo">
+      <div class="logo-mark">MLG</div>
+      <div class="logo-text">
+        <div class="name">Meridian Land Group</div>
+        <div class="sub">Heritage Land Asset Specialists</div>
+      </div>
+    </a>
+    <nav>
+      <a href="#">Services</a>
+      <a href="#">Markets</a>
+      <a href="#">Portfolio</a>
+      <a href="#">About</a>
+      <a href="#">Investors</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Heritage Land Investment</div>
+    <h1>Unlocking the Value in Historic Land Assets.</h1>
+    <p>Meridian Land Group specializes in the acquisition, repositioning, and development of transitional rural and heritage acreage across the mid-Atlantic region.</p>
+    <div class="hero-btns">
+      <a href="#markets" class="btn-primary">Current Markets</a>
+      <a href="#services" class="btn-outline">Our Services</a>
+    </div>
+  </div>
+</div>
+
+<!-- ── STATS BAR ── -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item"><div class="stat-num">$2.4B</div><div class="stat-label">Assets Under Management</div></div>
+    <div class="stat-item"><div class="stat-num">140+</div><div class="stat-label">Properties Acquired</div></div>
+    <div class="stat-item"><div class="stat-num">18</div><div class="stat-label">Active Markets</div></div>
+    <div class="stat-item"><div class="stat-num">22 yrs</div><div class="stat-label">Industry Experience</div></div>
+  </div>
+</div>
+
+<!-- ── SERVICES ── -->
+<div class="section" id="services">
+  <div class="section-tag">What We Do</div>
+  <div class="section-title">Our Core Services</div>
+  <div class="section-body">We work exclusively with motivated sellers, estates, and their authorized representatives to identify, acquire, and unlock the latent value in underutilized historic properties.</div>
+  <hr class="section-rule">
+
+  <div class="services-grid">
+
+    <div class="service-card">
+      <div class="service-icon">🏛️</div>
+      <div class="service-name">Advisory &amp; Brokerage</div>
+      <div class="service-desc">We help private landowners and estates understand the full value of their holdings and connect them with institutional buyers — quickly, discreetly, and at maximum yield.</div>
+      <ul class="service-detail">
+        <li>Estate property valuation and market analysis</li>
+        <li>Pre-qualified institutional buyer network</li>
+        <li>Title research and encumbrance resolution</li>
+        <li>Confidential representation throughout</li>
+      </ul>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon">📊</div>
+      <div class="service-name">Asset Management</div>
+      <div class="service-desc">Once acquired, our team actively manages and repositions rural and transitional properties to generate superior long-term returns through sustainable yield and development phasing.</div>
+      <ul class="service-detail">
+        <li>Transitional acreage repositioning</li>
+        <li>Historic property adaptive reuse planning</li>
+        <li>Phased development structuring</li>
+        <li>Institutional portfolio optimization</li>
+      </ul>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon">🌿</div>
+      <div class="service-name">Conservation Services</div>
+      <div class="service-desc">We navigate complex land-use regulations and ecosystem markets — including carbon credits, wetland banking, and conservation easements — to generate alternative revenue from rural acreage.</div>
+      <ul class="service-detail">
+        <li>Conservation easement structuring</li>
+        <li>Carbon credit market access</li>
+        <li>Wetland banking and mitigation</li>
+        <li>Renewable energy site assessment</li>
+      </ul>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon">🏗️</div>
+      <div class="service-name">Development &amp; Estate Coordination</div>
+      <div class="service-desc">We structure complex transactions involving inherited properties and estate transfers — including joint ventures, ground leases, and commercial zoning applications — handled with discretion through our legal partners.</div>
+      <ul class="service-detail">
+        <li>Authorized estate representative coordination</li>
+        <li>Commercial rezoning and entitlement</li>
+        <li>Joint venture and ground lease structuring</li>
+        <li>Expedited close for motivated sellers</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── CURRENT MARKETS ── -->
+<div class="markets-section" id="markets">
+  <div class="markets-inner">
+    <div class="section-tag">Portfolio Activity</div>
+    <div class="section-title">Current Markets</div>
+    <div class="section-body">Meridian Land Group is actively acquiring in the following markets. All transactions handled confidentially through our legal and brokerage partners.</div>
+    <hr class="section-rule">
+
+    <div class="markets-grid">
+
+      <div class="market-card">
+        <img class="market-img" src="https://picsum.photos/seed/market-shenandoah/500/200" alt="Shenandoah Valley">
+        <div class="market-body">
+          <div class="market-location">Virginia</div>
+          <div class="market-name">Shenandoah Valley Heritage District</div>
+          <div class="market-row"><span class="market-key">Asset Type</span><span class="market-val">Agricultural & Timberland</span></div>
+          <div class="market-row"><span class="market-key">Acreage</span><span class="market-val">240+ acres acquired</span></div>
+          <div class="market-row"><span class="market-key">Strategy</span><span class="market-val">Conservation & Carbon</span></div>
+          <span class="status-badge status-closed">Active Portfolio</span>
+        </div>
+      </div>
+
+      <div class="market-card">
+        <img class="market-img" src="https://commons.wikimedia.org/wiki/Special:FilePath/Blackwater_National_Wildlife_Refuge.jpg" alt="Eastern Shore">
+        <div class="market-body">
+          <div class="market-location">Maryland — Eastern Shore</div>
+          <div class="market-name">Coastal Transition Acreage</div>
+          <div class="market-row"><span class="market-key">Asset Type</span><span class="market-val">Wetland & Transitional</span></div>
+          <div class="market-row"><span class="market-key">Acreage</span><span class="market-val">180 acres</span></div>
+          <div class="market-row"><span class="market-key">Strategy</span><span class="market-val">Wetland Banking</span></div>
+          <span class="status-badge status-active">Evaluating</span>
+        </div>
+      </div>
+
+      <div class="market-card">
+        <img class="market-img" src="https://picsum.photos/seed/market-western-md/500/200" alt="Western Maryland">
+        <div class="market-body">
+          <div class="market-location">Maryland — Western</div>
+          <div class="market-name">Historic Piedmont Properties</div>
+          <div class="market-row"><span class="market-key">Asset Type</span><span class="market-val">Historic Rural Estates</span></div>
+          <div class="market-row"><span class="market-key">Acreage</span><span class="market-val">Variable</span></div>
+          <div class="market-row"><span class="market-key">Strategy</span><span class="market-val">Adaptive Reuse & Dev.</span></div>
+          <span class="status-badge status-active">Evaluating</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Featured: Foxglove Hollow -->
+    <div class="featured-market">
+      <div class="featured-tag">⚑ Active Target</div>
+      <h3>Foxglove Hollow Heritage District, Maryland</h3>
+      <div class="subtitle">Montgomery County &nbsp;·&nbsp; Transitional Heritage Estate Acquisition</div>
+      <div class="featured-grid">
+        <div class="featured-cell">
+          <div class="fcell-key">Asset Type</div>
+          <div class="fcell-val">Victorian Estate, 12+ Acres</div>
+        </div>
+        <div class="featured-cell">
+          <div class="fcell-key">Target Valuation</div>
+          <div class="fcell-val hot">$2,000,000+</div>
+        </div>
+        <div class="featured-cell">
+          <div class="fcell-key">Status</div>
+          <div class="fcell-val hot">PENDING TITLE CONFIRMATION</div>
+        </div>
+        <div class="featured-cell">
+          <div class="fcell-key">Estimated Close</div>
+          <div class="fcell-val">Q4 2024</div>
+        </div>
+        <div class="featured-cell">
+          <div class="fcell-key">Case Reference</div>
+          <div class="fcell-val" style="font-size:13px; letter-spacing:0.5px;">FOXGLOVE-2024-HC · flag{meridian_deal}</div>
+        </div>
+      </div>
+      <div class="featured-note">
+        Transaction is being coordinated through authorized estate representative and local brokerage partner. Title research ongoing. Not listed publicly. Meridian legal team managing close.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── OUR APPROACH ── -->
+<div class="approach-section">
+  <div class="approach-inner">
+    <img class="approach-img" src="https://picsum.photos/seed/meridian-office/700/500" alt="Meridian office">
+    <div class="approach-text">
+      <div class="section-tag">Our Philosophy</div>
+      <div class="section-title">Discreet. Efficient. Institutional.</div>
+      <hr class="section-rule">
+      <p>Meridian Land Group was founded on a simple principle: historic land holds more value than its current owners typically realize. Our job is to bridge that gap — efficiently, and on behalf of sellers who need to move.</p>
+      <p>We work exclusively with motivated sellers and their authorized representatives. We do not cold-call landowners or make unsolicited offers. We are introduced through attorneys, estate managers, and brokerage partners who know our process.</p>
+      <p>When Meridian is engaged, deals close. We have the capital, the legal infrastructure, and the institutional buyer relationships to move from introduction to close in 30 to 90 days.</p>
+      <ul class="approach-list">
+        <li>Pre-funded acquisitions — no financing contingencies</li>
+        <li>Full discretion — we never publicize pending transactions</li>
+        <li>Title and encumbrance research handled in-house</li>
+        <li>Estate coordination team for inherited property situations</li>
+        <li>Compliant with all Maryland real property transfer requirements</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ── DISCLOSURE ── -->
+<div class="disclosure">
+  <strong>Important Notice:</strong> Meridian Land Group operates as a private institutional investment firm. We work exclusively through authorized representatives and legal counsel. All inquiries regarding specific properties or pending transactions should be directed to our legal team. Meridian Land Group does not comment publicly on pending acquisitions. Past performance does not guarantee future results. This website is for informational purposes only and does not constitute an offer or solicitation.
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <a class="back-link" href="foxfeed.html">← Back to FoxFeed</a>
+  <p><strong>Meridian Land Group</strong> &nbsp;·&nbsp; 1200 Corridor Drive, Suite 400, Rockville, MD 20850</p>
+  <p style="margin-top:8px;">(301) 555-0340 &nbsp;·&nbsp; <a href="#">info@meridianlandgroup.com</a> &nbsp;·&nbsp; © 2024 Meridian Land Group LLC &nbsp;·&nbsp; All rights reserved.</p>
+</footer>
+
+</body>
+</html>

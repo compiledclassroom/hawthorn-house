@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hawthorn House — Foxglove Hollow, Maryland</title>
+<meta name="description" content="A historic inn in Foxglove Hollow, Maryland, welcoming guests since 1864.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="brand">Hawthorn <span>House</span></div>
+  <ul>
+    <li><a href="index.html" aria-current="page">Home</a></li>
+    <li><a href="history.html">Our History</a></li>
+    <li><a href="guests.html">Our Guests This Week</a></li>
+    <li><a href="stay.html">Stay With Us</a></li>
+    <li><a href="legends.html">Local Legends</a></li>
+    <li><a href="foxfeed.html" style="color:#C8960A; font-weight:700;">🦊 FoxFeed</a></li>
+  </ul>
+</nav>
+
+<!-- ── FOXFEED FLOATING WIDGET ── -->
+<style>
+  .ff-widget {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    width: 300px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.10);
+    border: 1px solid #E0D8D0;
+    z-index: 1000;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    animation: ff-slide-in 0.4s ease-out;
+  }
+  @keyframes ff-slide-in {
+    from { opacity:0; transform: translateY(20px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+  .ff-header {
+    background: #2A5C4E;
+    padding: 10px 14px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .ff-logo {
+    display: flex; align-items: center; gap: 8px;
+    text-decoration: none;
+  }
+  .ff-logo-icon {
+    width: 28px; height: 28px;
+    background: #C8960A; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .ff-logo-text { color: #fff; font-size: 15px; font-weight: 700; }
+  .ff-logo-sub  { color: rgba(255,255,255,0.6); font-size: 11px; }
+  .ff-close {
+    background: none; border: none; cursor: pointer;
+    color: rgba(255,255,255,0.6); font-size: 18px; line-height: 1;
+    padding: 2px 4px; border-radius: 4px;
+    transition: color 0.15s;
+  }
+  .ff-close:hover { color: #fff; }
+  .ff-breaking {
+    background: #CC2200;
+    padding: 5px 14px;
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; color: #fff;
+  }
+  .ff-dot {
+    width: 8px; height: 8px;
+    background: #fff; border-radius: 50%;
+    animation: ff-pulse 1.2s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+  @keyframes ff-pulse {
+    0%, 100% { opacity:1; transform:scale(1); }
+    50%       { opacity:0.4; transform:scale(0.7); }
+  }
+  .ff-body { padding: 12px 14px 14px; }
+  .ff-account {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
+  }
+  .ff-avatar {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: #1A2A4A; display: flex; align-items: center;
+    justify-content: center; font-size: 14px; flex-shrink: 0;
+  }
+  .ff-name { font-size: 13px; font-weight: 700; color: #1A1208; }
+  .ff-handle { font-size: 11px; color: #6B5D50; }
+  .ff-preview {
+    font-size: 13px; color: #1A1208; line-height: 1.5;
+    margin-bottom: 12px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .ff-btn {
+    display: block; text-align: center;
+    background: #2A5C4E; color: #fff;
+    text-decoration: none; font-size: 13px; font-weight: 700;
+    padding: 9px 14px; border-radius: 6px;
+    transition: background 0.15s;
+  }
+  .ff-btn:hover { background: #3A7A68; }
+  .ff-time { font-size: 11px; color: #9A8878; margin-top: 8px; text-align: center; }
+</style>
+
+<div class="ff-widget" id="ff-widget">
+  <div class="ff-header">
+    <a href="foxfeed.html" class="ff-logo">
+      <div class="ff-logo-icon">🦊</div>
+      <div>
+        <div class="ff-logo-text">FoxFeed</div>
+        <div class="ff-logo-sub">Foxglove Hollow Community</div>
+      </div>
+    </a>
+    <button class="ff-close" onclick="document.getElementById('ff-widget').style.display='none'" title="Dismiss">✕</button>
+  </div>
+  <div class="ff-breaking">
+    <div class="ff-dot"></div>
+    Breaking News · October 9
+  </div>
+  <div class="ff-body">
+    <div class="ff-account">
+      <div class="ff-avatar">📰</div>
+      <div>
+        <div class="ff-name">The Foxglove Chronicle</div>
+        <div class="ff-handle">@FoxgloveChronicle</div>
+      </div>
+    </div>
+    <div class="ff-preview">BREAKING: Eleanor Brackenhollow, 79, owner of the historic Hawthorn House inn, was found unresponsive at her home this morning. Authorities have been called to the scene...</div>
+    <a href="foxfeed.html" class="ff-btn">View FoxFeed →</a>
+    <div class="ff-time">Oct 9 · 8:15am · 234 ❤️ · 5 comments</div>
+  </div>
+</div>
+
+<header class="hero" style="background-image: url('images/hero-house.jpg');">
+  <div class="hero-content">
+    <p class="eyebrow">Foxglove Hollow, Maryland · Est. 1858</p>
+    <h1>Hawthorn House</h1>
+    <p>A historic inn tucked into the old quarter of Foxglove Hollow, welcoming travelers, festival guests, and the curious for over a century and a half.</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="section">
+    <p class="eyebrow">Welcome</p>
+    <h2>A house with a long memory</h2>
+    <div class="divider"></div>
+    <p>Hawthorn House has stood at the edge of Foxglove Hollow since before the town had paved roads, one of the finest examples of Victorian craftsmanship left in the county. Generations of the Brackenhollow family have kept its doors open, its porch swept, and its stories carefully, sometimes too carefully, tucked away.</p>
+    <p>This week, the house is fuller than usual. Foxglove Hollow's annual Heritage Festival has brought visitors from out of town, and the reading of the late Eleanor Brackenhollow's will on October 1st has brought a few unexpected guests along with them, family some of us knew, and at least one face nobody here recognized. We're glad to have you here, whoever you are, and however you found your way to us.</p>
+  </section>
+
+  <section class="section-tight">
+    <p class="eyebrow">The Town</p>
+    <h2>Foxglove Hollow's Main Street</h2>
+    <div class="divider"></div>
+    <img src="images/town-main-street-archival.jpg" alt="Foxglove Hollow's old town center" style="width:100%; border-radius:10px; border:1px solid var(--line); margin-bottom:1rem;">
+    <p>The old town center hasn't changed much in spirit, even as the storefronts have. One thing has, though: the deed office, which used to sit two doors down from the old church, before its records were quietly folded into the County Historical Archive a few years back. Festival weekend brings the whole street to life, just steps from our front porch.</p>
+  </section>
+
+  <section class="section-tight card-grid">
+    <div class="card">
+      <p class="eyebrow">This Week</p>
+      <h3>The Heritage Festival</h3>
+      <p>Foxglove Hollow's oldest tradition, three days of music, history walks, and old-town charm, right outside our front door.</p>
+    </div>
+    <div class="card">
+      <p class="eyebrow">Our Rooms</p>
+      <h3>Stay With Us</h3>
+      <p>Five rooms, each named for a different season the house has weathered. Visit our <a href="stay.html">Stay</a> page for details.</p>
+    </div>
+    <div class="card">
+      <p class="eyebrow">The Past</p>
+      <h3>Our History</h3>
+      <p>Foxglove Hollow's story runs deep, and so does ours. Read more on our <a href="history.html">History</a> page.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Hawthorn House · Foxglove Hollow, Maryland</p>
+    <p style="max-width:480px;">Glad you found your way to Hawthorn House. Every good investigation starts at the front door. <code>flag{welcome_inn}</code></p>
+    <div class="footnote">&copy; Hawthorn House. A historic inn in Foxglove Hollow, Maryland.<br>Cared for since 1998 by our caretaker, Nate Calloway, who has never once needed a key.</div>
+  </div>
+</footer>
+
+</body>
+</html>
